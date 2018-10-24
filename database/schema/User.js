@@ -15,6 +15,8 @@ const userSchema = new Schema({
   password: {type: String},
   createAt: {type: Date, default: Date.now()},
   lastLoginAt: {type: Date, default: Date.now()}
+}, {
+  collection: 'user'
 })
 
 
@@ -29,6 +31,17 @@ userSchema.pre('save', function (next) {
     })
   })
 })
+
+userSchema.methods = {
+  comparePassword: (_password, password) => {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(_password, password, (err, isMatch) => {
+        if (!err) resolve(isMatch)
+        else reject(err)
+      })
+    })
+  }
+}
 
 // 发布模型
 mongoose.model('User', userSchema)
