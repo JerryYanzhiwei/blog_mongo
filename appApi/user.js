@@ -2,24 +2,36 @@ const Router = require('koa-router')
 
 const mongoose = require('mongoose')
 
+const createToken = require('../token/createToken.js')
+
 let router = new Router()
 
 router.get('/', async(ctx) => {
   ctx.body = '这是用户操作首页'
 })
 
-router.get('/login', async(ctx) => {
-  ctx.body = '用户登录接口'
-})
-
 router.post('/register', async(ctx) => {
   const User = mongoose.model('User')
-  let newUser = new User(ctx.request.body)
-  await newUser.save().then(() => {
-    ctx.body = {
-      code: 200,
-      message: '注册成功'
-    }
+  let data = ctx.request.body
+  let addUser = {
+    userName: data.userName,
+    password: data.password,
+    token: createToken(data.userName),
+    lastLoginAt: Date.now()
+  }
+  let newUser = new User(addUser)
+  await newUser.save().then(async () => {
+    await User.findOne({
+      userName: newUser.userName
+    }).exec().then(result => {
+      ctx.body = {
+        code: 200,
+        data: {
+          userName: result.userName
+        },
+        message: '注册成功'
+      }
+    })
   }).catch(error => {
     ctx.body = {
       code: 500,
@@ -31,7 +43,6 @@ router.post('/register', async(ctx) => {
 
 router.post('/login', async(ctx) => {
   let loginUser = ctx.request.body
-  console.log(loginUser)
   let userName = loginUser.userName
   let password = loginUser.password
 
@@ -48,8 +59,10 @@ router.post('/login', async(ctx) => {
       .then((isMatch) => {
         ctx.body = {
           code: 200,
-          data: loginUser,
-          message: isMatch
+          data: {
+            loginUser: loginUser.userName
+          },
+          message: '登录成功'
         }
       }).catch(error => {
         console.log(error)

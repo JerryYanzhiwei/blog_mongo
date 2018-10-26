@@ -7,12 +7,13 @@ let ObjectId = Schema.Types.ObjectId
 const bcrypt = require('bcrypt')
 const SALT_WORK_FACTOR = 10
 
-// 创建用户Schame
+// 创建用户Schema
 
 const userSchema = new Schema({
   userId: {type: ObjectId},
   userName: {unique: true, type: String},
   password: {type: String},
+  token: {type: String},
   createAt: {type: Date, default: Date.now()},
   lastLoginAt: {type: Date, default: Date.now()}
 }, {
