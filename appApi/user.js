@@ -2,8 +2,6 @@ const Router = require('koa-router')
 
 const mongoose = require('mongoose')
 
-const createToken = require('../token/createToken.js')
-
 let router = new Router()
 
 router.get('/', async(ctx) => {
@@ -16,7 +14,6 @@ router.post('/register', async(ctx) => {
   let addUser = {
     userName: data.userName,
     password: data.password,
-    token: createToken(data.userName),
     lastLoginAt: Date.now()
   }
   let newUser = new User(addUser)
@@ -54,9 +51,7 @@ router.post('/login', async(ctx) => {
   }).exec().then(async(result) => {
     console.log(result)
     if (result) {
-      let newUser = new User()
-      await newUser.comparePassword(password, result.password)
-      .then((isMatch) => {
+      if (password == result.password) {
         ctx.body = {
           code: 200,
           data: {
@@ -64,13 +59,12 @@ router.post('/login', async(ctx) => {
           },
           message: '登录成功'
         }
-      }).catch(error => {
-        console.log(error)
+      } else {
         ctx.body = {
           code: 500,
-          message: '服务器出现异常'
+          message: '密码错误'
         }
-      })
+      }
     } else {
       ctx.body = {
         code: 9000,

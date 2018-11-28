@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const db = "mongodb://localhost/blog"
+const db = "mongodb://localhost:27017/blog"
 
 const glob = require('glob')
 const {resolve} = require('path')

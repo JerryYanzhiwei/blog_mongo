@@ -28,10 +28,10 @@ let user = require('./appApi/user.js')
 let article = require('./appApi/article.js')
 
 // 用户相关接口
-router.use('/user', user.routes())
+router.use('/api/user', user.routes())
 
 // 文章相关接口
-router.use('/article', article.routes())
+router.use('/api/article', article.routes())
 
 
 // 加载路由中间件

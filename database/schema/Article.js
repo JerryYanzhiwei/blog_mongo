@@ -8,12 +8,13 @@ let ObjectId = Schema.Types.ObjectId
 
 const articleSchema = new Schema({
   id: {type: ObjectId},
-  type: {type: String},
-  from: {type: String},
+  classify: {type: String},
+  source: {type: String},
   title: {type: String},
   content: {type: String},
   author: {type: String},
   createAt: {type: String},
+  imgUrl: {type: String},
   record: {type: Date, default: Date.now()}
 }, {
   collection: 'article'
