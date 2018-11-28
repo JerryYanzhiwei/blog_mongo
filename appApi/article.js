@@ -78,9 +78,30 @@ router.post('/edit_article', async (ctx) => {
   await Article.update({
     _id: aritcle_edit._id
   }, aritcle_edit).then(result => {
-    console.log(result)
-    if (result.ok) {
-      ctx.bdoy = {
+    console.log(result.ok)
+    if (result.ok == 1) {
+      ctx.body = {
+        code: 200,
+        message: 'success'
+      }
+    } else {
+      ctx.body = {
+        code: 9999,
+        message: 'server is error'
+      }
+    }
+  })
+})
+
+// 删除文章
+router.post('/delete_article', async (ctx) => {
+  let id = ctx.request.body.id
+  const Article = mongoose.model('Article')
+  await Article.deleteOne({
+    _id: id
+  }).then(result => {
+    if (result.ok == 1) {
+      ctx.body = {
         code: 200,
         message: 'success'
       }
@@ -97,7 +118,7 @@ router.post('/edit_article', async (ctx) => {
 var storage = multer.diskStorage({
   // 文件保存路径
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/')
+    cb(null, 'public/uploads/images')
   },
 
   // 修改文件名称
@@ -114,7 +135,7 @@ router.post('/upload', upload.single('file'), async (ctx, next) => {
   // console.log(ctx.req)
   ctx.body = {
     code: 200,
-    filename: `www.jerryzw.top/${ctx.req.file.filename}`
+    filename: `http://www.jerryzw.top/images/${ctx.req.file.filename}`
   }
 })
 
