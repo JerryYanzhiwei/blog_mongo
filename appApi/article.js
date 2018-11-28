@@ -114,7 +114,7 @@ router.post('/upload', upload.single('file'), async (ctx, next) => {
   // console.log(ctx.req)
   ctx.body = {
     code: 200,
-    filename: ctx.req.file.filename
+    filename: `www.jerryzw.top/${ctx.req.file.filename}`
   }
 })
 
