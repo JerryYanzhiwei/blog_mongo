@@ -11,6 +11,7 @@ const articleSchema = new Schema({
   classify: {type: String},
   source: {type: String},
   title: {type: String},
+  discript: {type: String},
   content: {type: String},
   author: {type: String},
   createAt: {type: String},
